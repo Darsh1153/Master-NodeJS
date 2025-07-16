@@ -59,9 +59,6 @@ Here's a simple explanation of how the Event Loop is managing the code shown in 
 🧠 What’s Happening Here?
 The code:
 
-js
-Copy
-Edit
 const a = 100;
 
 setImmediate(() => console.log("setImmediate"));        // A
@@ -76,6 +73,9 @@ function printA() {
 
 printA();                                                
 console.log("Last line of the file.");
+
+
+
 🔁 How the Event Loop Manages This:
 Synchronous Code Runs First (in the Call Stack):
 
@@ -85,9 +85,6 @@ console.log("Last line of the file.");
 
 ✅ So the console shows:
 
-arduino
-Copy
-Edit
 a = 100
 Last line of the file.
 Now Event Loop Kicks In:
