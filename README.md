@@ -59,20 +59,8 @@ Here's a simple explanation of how the Event Loop is managing the code shown in 
 🧠 What’s Happening Here?
 The code:
 
-const a = 100;
+![DC8C16CC-009C-43B9-A102-A2E692EBBE0C](https://github.com/user-attachments/assets/51ab47f2-e1ec-4a0c-8784-8d30690b5bdb)
 
-setImmediate(() => console.log("setImmediate"));        // A
-fs.readFile("./file.txt", "utf8", () => {                // C
-  console.log("File Reading CB");
-});
-setTimeout(() => console.log("Timer expired"), 0);       // B
-
-function printA() {
-  console.log("a =", a);                                 
-}
-
-printA();                                                
-console.log("Last line of the file.");
 
 
 
