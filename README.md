@@ -114,4 +114,7 @@ Check Phase (setImmediate)
 Poll Phase (fs.readFile callback)
 
 
+# WHAT IS THE DIFFERENCE BETWEEN SQL AND NOSQL
+![94E6121D-D83D-4392-85F9-C1F1AF7D2FB6](https://github.com/user-attachments/assets/b63f1bd7-9796-4dcf-879b-574fed1c7405)
+
 
