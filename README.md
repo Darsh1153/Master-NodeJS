@@ -118,3 +118,148 @@ Poll Phase (fs.readFile callback)
 ![94E6121D-D83D-4392-85F9-C1F1AF7D2FB6](https://github.com/user-attachments/assets/b63f1bd7-9796-4dcf-879b-574fed1c7405)
 
 
+# HOW DO YOU AUTHENTICATE, THE CORRECT WAY
+
+![08502831-BFE0-41C2-8B7A-F1CF8406380B](https://github.com/user-attachments/assets/bf28daa0-f90a-4974-ab15-c185310fbe0e)
+
+1. User Login Request:
+Client Side (User): The user initiates the login process by providing their email and password.
+
+This is typically a POST request to the login endpoint on the server, where the user sends their credentials.
+
+Example:
+
+json
+Copy
+Edit
+{
+  "email": "user@example.com",
+  "password": "userPassword123"
+}
+<br/>
+2. Server Authentication (Validation):
+Server Side (Backend):
+
+Server receives the request and starts validating the user credentials.
+
+The server checks the provided email and password against the stored data (e.g., in a database).
+
+Password validation typically uses hashing techniques (e.g., bcrypt) to compare the password without exposing it in plaintext.
+
+<br/>
+3. JWT Generation:
+If the credentials are valid, the server generates a JWT (JSON Web Token).
+
+This JWT typically contains user information (like the user ID or email) and expiration data (i.e., how long the token is valid for).
+
+Example JWT structure:
+
+json
+Copy
+Edit
+{
+  "userId": "123456",
+  "email": "user@example.com",
+  "exp": 1625136123  // Expiration timestamp
+}
+<br/>
+4. Sending the JWT to Client:
+The server sends the JWT back to the client in the HTTP response.
+
+This JWT is sent as a cookie (in most cases), or it could be sent in the response body or headers.
+
+If the JWT is sent as a cookie, the server may set the cookie with the HttpOnly flag, meaning it cannot be accessed via JavaScript on the client-side. This enhances security.
+
+Cookie Example:
+
+http
+Copy
+Edit
+Set-Cookie: token=<JWT_TOKEN>; HttpOnly; Secure; SameSite=Strict;
+
+<br/>
+
+5. Client Stores the JWT (Cookie Storage):
+The client’s browser stores the JWT in a cookie.
+
+Cookie Storage: The browser handles cookies automatically. Whenever the JWT is stored as a cookie, it gets sent along with every subsequent request to the same server.
+
+Cookies are stored on the user's device and are automatically included in each HTTP request header sent to the server, without needing to be manually added.
+
+Important flags for cookies:
+
+HttpOnly: Makes the cookie inaccessible via JavaScript, enhancing security.
+
+Secure: Ensures the cookie is only sent over HTTPS.
+
+SameSite: Restricts how cookies are sent with cross-site requests (important for preventing CSRF attacks).
+<br/>
+
+6. Subsequent Requests with JWT:
+Client Requests Data: After the JWT is stored in the cookie, the client can make further requests (e.g., to access protected routes).
+
+The browser automatically includes the JWT cookie in the request headers.
+
+Example of an HTTP request with the cookie:
+
+http
+Copy
+Edit
+GET /profile
+Cookie: token=<JWT_TOKEN>
+<br/>
+
+7. Server Validates JWT:
+Server: On receiving a request with the JWT in the cookie, the server extracts and validates the JWT.
+
+It checks whether the JWT is valid (not expired) and if the user information inside the token matches the requested resource.
+
+If the JWT is valid, the server allows access to the requested resource (e.g., user profile, dashboard).
+
+If invalid or expired, the server will respond with an authentication error and may ask the client to log in again.
+<br/>
+
+8. JWT Expiry & Refresh Tokens:
+If the JWT has expired, the server may either:
+
+Return a 401 Unauthorized response, requiring the user to log in again.
+
+Or, use a refresh token (if implemented) to generate a new JWT without requiring the user to re-enter their credentials.
+
+Key Points to Remember:
+JWT: A secure token that identifies the user and is used for authentication.
+
+Cookies: Store the JWT and are automatically included in HTTP requests by the browser.
+
+Server: Validates the JWT on every request to ensure the user is authorized to access protected resources.
+
+Security: HttpOnly and Secure flags are crucial for securing cookies, preventing them from being accessed or tampered with.
+
+Example of JWT Authentication Flow:
+Login:
+
+User sends email and password → Server validates → Server generates JWT.
+
+Token sent back:
+
+Server sends JWT as a cookie (with HttpOnly, Secure, and SameSite flags).
+
+Subsequent Request:
+
+User makes another request (e.g., to access profile) → Cookie with JWT sent automatically → Server validates JWT → User is authorized.
+
+Diagram Summary (Flow):
+User sends login request → Server validates email and password.
+
+Server generates JWT → Sends JWT back to the client as a cookie.
+
+Client stores the JWT cookie.
+
+Client makes subsequent requests → Browser sends JWT cookie automatically with each request.
+
+Server validates JWT → Grants or denies access based on validity.
+
+This process ensures a secure and stateless authentication mechanism, where the server doesn't need to store session data. The JWT handles the user's state and credentials for future requests.
+
+
+
